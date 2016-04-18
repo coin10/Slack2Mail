@@ -27,7 +27,7 @@ Object.keys(User).forEach(function (userKey) {
 
     client.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
         rtmStartData.users.forEach(function (userId) {
-            if (!User[userId.id]) console.log('Missing user parameters from: \n ' + JSON.stringify(userId) + '\n');
+            //if (!User[userId.id]) console.log('Missing user parameters from: \n ' + JSON.stringify(userId) + '\n');
         });
 
         if (User[userKey].isAdmin) {
@@ -36,7 +36,9 @@ Object.keys(User).forEach(function (userKey) {
 
                 Channels[channel.id] = channel;
 
-                Channels[channel.id].members = Channels[channel.id].members.map(function (member) {
+                Channels[channel.id].members = Channels[channel.id].members.filter(function (member) {
+                    return User[member] !== undefined;
+                }).map(function (member) {
                     return _.merge({id: member}, User[member]);
                 });
             });
